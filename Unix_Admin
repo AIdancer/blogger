@@ -3,3 +3,16 @@
 
 2. Create a group called trainee with gid 1500
 --> groupadd -g 1500 trainee
+
+3. command about cpio.
+--> find /directory_path -mtime -1 -ls
+--> find / -print | cpio -covB > /dev/st0
+--> cpio -icdvt < /dev/st0 > /tmp/st_content
+--> cpio –icduv < /opt/etc.cpio (还原到原来位置)
+
+4. prevent root to login
+--> https://www.centos.org/docs/5/html/5.1/Deployment_Guide/s2-wstation-privileges-noroot.html
+
+5. Logging & monitoring
+--> lsof
+--> /etc/logrotate.conf
