@@ -1,2 +1,5 @@
 1. Confirm what runlevel the system is operating at.
 --> runlevel
+
+2. Create a group called trainee with gid 1500
+--> groupadd -g 1500 trainee
