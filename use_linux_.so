@@ -1,0 +1,16 @@
+本文讲述了怎样创建和使用linux中的.so文件
+
+1、创建 .so
+      比如我现在又show.h show.cpp main.cpp 三个文件，那么编译出.so可以这样来。
+      g++ -c -fPIC show.cpp -o show.o
+      g++ -shared show.o -o libshow.so
+      这样就得到了.so 文件
+2、使用.so
+      g++ show.cpp main.cpp -o main -I./ -L./ -lshow
+      就可以得到可执行文件main了
+3、修改环境变量
+      1) 直接运行会失败，因为-L只是告诉g++编译时去哪里检查.so，但程序运行时默认寻找.so的Path是/usr/lib，所以需要将.so文件copy到/usr/lib；
+      2) 也可以创建软链接：ln -s /home/XX/code/libshow.so /usr/lib，但是软链接有时候也会不起作用，比如说.so所在的目录g++没有访问权限。
+      3) 一个临时也比较有效的做法是：LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/XX/code;     export LD_LIBRARY_PATH; 然后肯定就可以用啦。
+      command : ./main
+      output : Hello, I'm Show Function!
