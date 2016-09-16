@@ -5,3 +5,9 @@
          g++ -shared show.o -o libshow.so
    After that, we call use the libshow.so in python, or call its extern "C" function in C file(Remember to -L, -l and load the
    write library).
+4. To load python module
+   from ctypes import *
+   libshow = cdll.LoadLibrary('your library path');
+   libshow.function(paramter);
+   
+5. Remeber set the LD_LIBRARY_PATH before running the program, or it may can not find the .so file.
