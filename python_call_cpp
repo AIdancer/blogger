@@ -1,0 +1,7 @@
+1. finish your cpp class file.
+2. add corresponding extern "C" function. (That means you should disign the function in C way by using the cpp API)
+3. for example, we have show.h and show.cpp. And there is corresponding C API to C++ class and function.
+   Then, g++ -fPIC -c show.cpp -o show.o
+         g++ -shared show.o -o libshow.so
+   After that, we call use the libshow.so in python, or call its extern "C" function in C file(Remember to -L, -l and load the
+   write library).
