@@ -82,7 +82,8 @@ do
 	i=`expr $i + 1`
 done
 
-
+# list your software's location which was installed by yum install.
+rpm -ql package-name
 
 
 
