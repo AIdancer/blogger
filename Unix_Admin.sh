@@ -1,3 +1,6 @@
+# Find the software/package's location in mac which is installed by brew.
+	brew info package
+
 1. Confirm what runlevel the system is operating at.
 --> runlevel
 
