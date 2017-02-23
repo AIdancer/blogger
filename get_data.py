@@ -2,7 +2,6 @@
 import math
 from WindPy import w
 import numpy as np
-import scp
 
 def TsToTime(ts):
     hour = ts / 3600;
@@ -64,8 +63,11 @@ def GetNightData(year, month, day, instrument):
                  '%s 23:30:00' % date_str).Data
     cnt = 0
     open_, high_, low_, close_ = data[0], data[1], data[2], data[3]
+    n = len(open_);
 
     for ts in range(TimeToTs(21, 0, 0), TimeToTs(23, 30, 0), 60):
+        if cnt >= n:
+            break
         bar = Bar(open_[cnt], high_[cnt], low_[cnt], close_[cnt])
         bar.SetTs(ts)
         bar_list.append(bar)
@@ -85,5 +87,18 @@ if __name__ == '__main__':
             line = '%s %s\n' % (instrument.split('.')[0], str(val))
             data_file.write(line)
     data_file.close()
-    client = scp.SCPClient
+    data_file = open('./data_all.mdt', 'a+')
+    for instrument in instrument_list:
+        list = GetNightData(2017, 2, 22, instrument)
+        for val in list:
+            if math.isnan(val.open):
+                continue
+            line = '%s %s\n' % (instrument.split('.')[0], str(val))
+            data_file.write(line)
+    data_file.close()
     print 'finished.'
+
+
+
+
+
