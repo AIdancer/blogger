@@ -12,6 +12,11 @@
     systemctl enable mariadb  #设置开机启动
     所以先启动数据库 : systemctl start mariadb
     然后就可以正常使用mysql了。
+    
+2. 在MacOS中，可以使用brew直接安装。
+    brew install mysql.
+    之后需要启动mysql的服务：bash mysql.server start
+    现在你就可以使用mysql了。
 
 2. C/C++开发中编译参数的获取。
     mysql_config --cflags --libs
