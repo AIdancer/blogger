@@ -6,3 +6,6 @@
       This error is due to strict content-type checking introduced in ElasticSearch 6.0, as explained in this post
       例如：curl -XPUT http://localhost:9200/blog/article/1 -d '{"title":"hello, world.", "tags":["bill", "bagens"]}' 
       -H 'Content-Type: application/json'
+      
+      
+      
