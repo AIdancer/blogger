@@ -1,11 +1,16 @@
+偏置值
+-----
+  我们也需要加入一个额外的偏置量（bias），因为输入往往会带有一些无关的干扰量。
 
-1、偏置值：我们也需要加入一个额外的偏置量（bias），因为输入往往会带有一些无关的干扰量。
-
-2、Elasticsearch content-type is not supported 错误:
+Elasticsearch content-type is not supported 错误:
+------------------------------------------------
       To fix this, add curl option -H 'Content-Type: application/json'
       This error is due to strict content-type checking introduced in ElasticSearch 6.0, as explained in this post
       例如：curl -XPUT http://localhost:9200/blog/article/1 -d '{"title":"hello, world.", "tags":["bill", "bagens"]}' 
       -H 'Content-Type: application/json'
       
+查看java_home方法
+----------------
+    /usr/libexec/java_home -V
       
       
