@@ -1,0 +1,79 @@
+tmux new -s 会话名  //新起一个会话
+tmux ls //查看现有的会话
+tmux a //进入最近的会话
+tmux a -t  会话名//进入指定会话
+tumx kill-session -t 会话名 //干掉指定会话
+
+
+
+control+b //唤起tmux(命令前缀)
+c  //创建新窗口
+w //查看所有窗口
+" //横分面板
+% //竖分面板
+, //修改窗口名
+? //查看所有命令,q退出
+q //显示面板号,快速输入面板号可以选择相应面板
+d //挂起当前会话
+s //查看所有会话,q退出
+$ //修改会话名称
+p //切换窗口
+: //命令行模式
+
+
+
+命令行模式下
+set mouse [on|off] //开起鼠标点击功能
+set synchronize-panes [on|off]//当前窗口下的面板同步操作
+
+
+
+
+
+#个性化配置
+
+# vim ~/.tmux.conf
+#
+set -g default-terminal "screen-256color" 
+
+# Use vim keybindings in copy mode 
+setw -g mode-keys vi
+
+# invoke reattach-to-user-namespace every time a new window/pane opens 
+set-option -g default-command "reattach-to-user-namespace -l bash" 
+
+# bind a reload key 
+bind r source-file ~/.tmux.conf \; display-message "Config reloaded" 
+
+#tip
+bind h display-message "Cont b [c:新建|,:重命名|d:退出|w:列表]" 
+
+# 状态栏 # 颜色 
+set -g status-bg black 
+set -g status-fg white 
+
+# 对齐方式 
+set-option -g status-justify centre
+
+# 左下角 
+set-option -g status-left '#[bg=black,fg=green][#[fg=cyan]#S#[fg=green]]' 
+set-option -g status-left-length 20
+
+# 右下角 
+set -g status-right '#[fg=green][#[fg=cyan]%Y-%m-%d %H:%M:%S 星期%a#[fg=green]]'
+
+# 窗口列表 
+setw -g automatic-rename on 
+set-window-option -g window-status-format '#[dim]#I:#[default]#W#[fg=grey,dim]' 
+set-window-option -g window-status-current-format '#[fg=cyan,bold]#I#[fg=blue]:#[fg=cyan]#W#[fg=dim]' 
+
+# Remap window(pane?) navigation to vim
+# 用 vim 的方式在窗格间移动光标
+unbind-key j
+bind-key j select-pane -D
+unbind-key k
+bind-key k select-pane -U
+unbind-key h
+bind-key h select-pane -L
+unbind-key l
+bind-key l select-pane -R
