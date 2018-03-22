@@ -24,3 +24,8 @@ windows下gitbash的配色主要修改文件：.minttyrc<br>
   White=238,232,213
   BoldWhite=253,246,227
 ```
+
+git安装目录下的/etc/profile中可以修改bash promt：
+```
+  PS1="zhaolq@AIdancer $ : "
+```
