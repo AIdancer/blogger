@@ -1,4 +1,5 @@
-windows下gitbash的配色主要修改文件：.minttyrc
+windows下gitbash的配色主要修改文件：.minttyrc<br>
+改文件默认在C:\Users\user_home_dir<br>
 
 配置如下：
 ```
