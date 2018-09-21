@@ -1,6 +1,6 @@
 ### sbt安装及问题
 
-  brew install sbt
+  brew install sbt <br>
   第一次运行sbt时速度特别慢，sbt跟maven一样需要下载很多jar包，解决方法如下：
   
  ``` bash
