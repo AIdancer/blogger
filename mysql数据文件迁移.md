@@ -11,6 +11,7 @@ rsync -av /var/lib/mysql/* /data/mysql
 [mysqld]
 datadir=/data/mysql
 socket=/data/mysql/mysql.sock
+!includedir /etc/my.cnf.d
 
 修改 /etc/my.cnf.d/client.cnf
 [client]
