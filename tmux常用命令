@@ -4,7 +4,8 @@ tmux a //进入最近的会话
 tmux a -t  会话名//进入指定会话
 tumx kill-session -t 会话名 //干掉指定会话
 
-
+59 8 * * 1-5 tmux new -s market -d "cd /home/ubuntu/code/firm/market/build && exec ./market"
+59 20 * * 1-5 tmux new -s market -d "cd /home/ubuntu/code/firm/market/build && exec ./market"
 
 control+b //唤起tmux(命令前缀)
 c  //创建新窗口
