@@ -153,7 +153,6 @@ Mac OS & MacTeX & TeXShop \\
 
 ### 模板2
 ```
-```
 \documentclass[UTF8]{ctexart}
 \usepackage{amsmath}
 \usepackage{graphicx}
