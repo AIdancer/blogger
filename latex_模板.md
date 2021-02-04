@@ -193,3 +193,89 @@ score(stock) = \sum_{i=1}^n w_i*factor_i(stock) \\
 
 \end{document}
 ```
+
+### 模板3
+```
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+
+\title{磁盘故障预测简报}
+\author{Zhao Liqiang}
+\date{\today}
+
+\begin{document}
+%\tableofcontents
+\maketitle
+
+\section{数据描述}
+\paragraph{}~{数据字段包含了63个SMART特征，有归一化及原始两个版本。目前使用的为归一化版本，主要原因是目前对原始值及其含义并不了解。对数据处理后，每一天的csv提取为一个 $m*n$ 的矩阵，矩阵的行为记录条数，前$n-1$列为63个特征值，最后一列为$label$。}\\
+
+\centerline{\includegraphics[scale=0.6]{data_fields.PNG}}
+
+\paragraph{缺失值填充}~{特征中还有很多$nan$值，目前的处理方式是将所有的$nan$值置零。}\\
+\paragraph{特征采样}~{由于正样本（磁盘出现错误）占整体数据的比例非常少，大概十几万条的数据中，只有个位数的样本报错；因此数据是严重偏斜的。目前做了1:1，1:2，1:5，1:10配比的正负样本采样对比。}\\
+
+\section{xgboost初步分类测试}
+\paragraph{}~{目前的测试使用了经过归一化后的全部特征，几种配比训练出的模型效果如下：}\\
+
+\begin{figure}[htbp]
+\begin{minipage}[t]{0.35\linewidth}
+\centering
+\includegraphics[height=3.5cm,width=6cm]{res1-1.PNG}
+\caption{正负 1:1}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.35\linewidth}
+\centering
+\includegraphics[height=3.5cm,width=6cm]{res1-2.PNG}
+\caption{正负 1:2}
+\end{minipage}
+\end{figure}
+\begin{figure}[htbp]
+\begin{minipage}[t]{0.35\linewidth}
+\centering
+\includegraphics[height=3.5cm,width=6cm]{res1-5.PNG}
+\caption{正负 1:5}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.35\linewidth}
+\centering
+\includegraphics[height=3.5cm,width=6cm]{res1-10.PNG}
+\caption{正负 1:10}
+\end{minipage}
+\end{figure}
+
+\paragraph{特征权重及选择}~{如下图所示，最重要的前9个特征有：f0(smart\_1\_normalized), f2(smart\_3\_normalized), f5(smart\_7\_normalized), f7(smart\_9\_normalized), f29(smart\_187\_normalized), f32(smart\_190\_normalized), f35(smart\_193\_normalized), f36(smart\_194\_normalized), f37(smart\_195\_normalized)}\\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=0.6]{feature_imp_1-1.png}
+\caption{正负配比 1:1}
+
+\centering
+\includegraphics[scale=0.6]{feature_imp_1-2.png}
+\caption{正负配比 1:2}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=0.6]{feature_imp_1-5.png}
+\caption{正负配比 1:5}
+
+\centering
+\includegraphics[scale=0.6]{feature_imp_1-10.png}
+\caption{正负配比 1:10}
+\end{figure}
+
+\section{下一步打算}
+\paragraph{精选特征}~{只使用比较重要的特征，减少噪音数据的影响。}\\
+\paragraph{使用概率预测}~{不在xgboost中使用类别，通过调整概率预测的阈值提高故障检测能力。}\\
+\paragraph{使用异常检测}~{数据偏斜实在非常严重，接下来将对重点特征尝试进行异常检测，并尽可能挖掘特征值与后续事件磁盘故障的相关性。}\\
+\paragraph{考虑时序数据的影响，尝试使用hmm等去改进预测性能。}
+
+\end{document}
+
+```
