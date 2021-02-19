@@ -1,3 +1,14 @@
+### paragraph首行缩进
+<p>
+ LaTeX 默认的第一段不是首行缩进的, 这不符合我们的中文习惯. <br>
+要实现首行缩进也很简单, <br>
+在导言区加入宏包首行 \usepackage{indentfirst} 就可以了. (LaTeX 学习博客 (http://latex.yo2.cn) , 白色印记.) <br>
+使用命令 设置 缩进的距离 \setlength{\parindent}{2em}  , <br>
+这里的 2em 表示缩进 2 个字符位置. <br>
+如果有一个段落你不想首行缩进, 在段落前使用命令 \noindent . <br>
+同样的, 你要保证这一段是首行缩进, 使用命令 \indent, 如果使用了 CJK 宏包, 还可以用\CJKindent. <br>
+</p>
+
 ### 模板1
 ```
 
