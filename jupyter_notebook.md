@@ -11,3 +11,11 @@ pip install ipython
 
 ### anaconda取消默认base
     conda config --set auto_activate_base false
+
+### jupyter notebook中文和负数乱码
+```
+import matplotlib as mpl
+
+mpl.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
+mpl.rcParams['axes.unicode_minus']=False #用来正常显示负号
+```
