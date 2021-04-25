@@ -12,7 +12,7 @@
 \end{document}
 ```
 
-### 双列显示
+#### 双列显示
 ```tex
 \documentclass[twocolumn]{article}
 \usepackage{ctex}
