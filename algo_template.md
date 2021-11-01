@@ -1,3 +1,82 @@
+### 最小生成树 & 并查集 & kruskal
+```C++
+//POJ 1287
+
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int N = 70;
+
+struct Edge {
+	int a, b, c;
+	Edge() {}
+	Edge(int _a, int _b, int _c) :a(_a), b(_b), c(_c) {}
+};
+
+bool cmp(const Edge& first, const Edge& second) {
+	return first.c < second.c;
+}
+
+int fa[N];
+int n, m;
+
+vector<Edge> vec;
+
+int get_father(int x) {
+	if (fa[x] != x)
+		fa[x] = get_father(fa[x]);
+	return fa[x];
+}
+
+void union_set(int x, int y) {
+	int fax, fay;
+	fax = get_father(x);
+	fay = get_father(y);
+	if (fax != fay) {
+		fa[fay] = fax;
+	}
+}
+
+int get_kruskal_value() {
+	int res = 0;
+	for (int i = 1; i <= n; i++) fa[i] = i;
+	int edges = vec.size();
+	int fa, fb;
+	Edge e;
+	for (int i = 0; i < edges; i++) {
+		e = vec[i];
+		fa = get_father(e.a);
+		fb = get_father(e.b);
+		if (fa != fb) {
+			res += e.c;
+			union_set(fa, fb);
+		}
+	}
+	return res;
+}
+
+int main() {
+	int a, b, c;
+	while (scanf(" %d", &n) != EOF) {
+		if (n == 0) break;
+		vec.clear();
+		scanf(" %d", &m);
+		for (int i = 0; i < m; i++) {
+			scanf(" %d %d %d", &a, &b, &c);
+			vec.push_back(Edge(a, b, c));
+		}
+		sort(vec.begin(), vec.end(), cmp);
+		int res = get_kruskal_value();
+		printf("%d\n", res);
+	}
+	return 0;
+}
+```
+
 ### 最小生成树(Prim)
 ```C++
 // POJ1287
