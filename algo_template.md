@@ -1,3 +1,69 @@
+### 最小生成树(Prim)
+```C++
+// POJ1287
+
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+const int N = 70;
+
+int dist[N];
+int n, m;
+int g[N][N];
+int a, b, c;
+bool visited[N];
+
+int get_prim_value() {
+	memset(visited, false, sizeof(visited));
+	int total = 0;
+	for (int i = 1; i <= n; i++) g[i][i] = 0;
+	for (int i = 1; i <= n; i++) {
+		if (g[1][i] != -1) {
+			dist[i] = g[1][i];
+		}
+	}
+	visited[1] = true;
+	for (int i = 1; i < n; i++) {
+		int mm = -1, index = -1;
+		for (int j = 1; j <= n; j++) {
+			if ((!visited[j]) && ((mm == -1) || (mm > dist[j])) ) {
+				index = j;
+				mm = dist[index];
+			}
+		}
+		visited[index] = true;
+		total += mm;
+		for (int j = 1; j <= n; j++) {
+			if ((!visited[j]) && (g[index][j] != -1) && ((dist[j] == -1) || (dist[j] > g[index][j]))) {
+				dist[j] = g[index][j];
+			}
+		}
+	}
+	return total;
+}
+
+int main() {
+	while (scanf(" %d", &n) != EOF) {
+		if (n == 0) break;
+		scanf(" %d", &m);
+		memset(dist, -1, sizeof(dist));
+		memset(g, -1, sizeof(g));
+		for (int i = 0; i < m; i++) {
+			scanf(" %d %d %d", &a, &b, &c);
+			if ((g[a][b] == -1) || (g[a][b] > c)) {
+				g[a][b] = g[b][a] = c;
+			}
+		}
+		int ans = get_prim_value();
+		printf("%d\n", ans);
+	}
+	return 0;
+}
+```
+
+
 ### KMP算法（POJ 3461）
 ```C++
 #include <iostream>
