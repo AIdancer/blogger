@@ -211,7 +211,7 @@ int main() {
 	}
 	return 0;
 }
-```
+``` 
 
 
 ### KMP算法（POJ 3461）
