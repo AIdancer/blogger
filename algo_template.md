@@ -1,3 +1,31 @@
+### 最短路径
+```C++
+// floyd所有点对最短路径
+const int N = 105;
+
+int c[N][N];
+int n;
+
+void floyd() {
+    for (int k = 1; k <= n; k++) {
+        for (int i = 1; i <= n; i++) {
+            if ((i == k) || (c[i][k] == -1)) continue;
+            for (int j = 1; j <= n; j++) {
+                if ((k == j) || (c[k][j] == -1)) continue;
+                if ((i != j) && (j != k) && (i != k)) {
+                    if ((c[i][j] == -1) || (c[i][j] > c[i][k] + c[k][j])) {
+                        c[i][j] = c[i][k] + c[k][j];
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+```
+
 ### 最小生成树 & 并查集 & kruskal
 ```C++
 //POJ 1287
