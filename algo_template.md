@@ -1,3 +1,46 @@
+
+### C++优先队列 自定义比较函数
+```C++
+
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+struct Node {
+    int x, y;
+    Node() { x = 0, y = 0; }
+    Node(int _x, int _y) :x(_x), y(_y) {}
+};
+
+struct cmp {
+    bool operator() (const Node& a, const Node& b) {
+        if (a.x == b.x) return a.y > b.y;
+        else return a.x > b.x;
+    }
+};
+
+priority_queue<Node, vector<Node>, cmp> q;
+
+int main() {
+    Node a(1, 2), b(1, 3), c(2, 5), d(-1, 3);
+    Node val;
+    q.push(a); q.push(b); q.push(c); q.push(d);
+    while (!q.empty()) {
+        val = q.top();
+        q.pop();
+        printf("%d %d\n", val.x, val.y);
+    }
+    return 0;
+}
+// 输出 -1,3   1,2    1,3   2,5
+// 优先队列默认为大顶堆，此处定义新的比较函数cmp，使队列变为小顶堆
+```
+
 ### 最短路径
 ```C++
 // floyd所有点对最短路径
