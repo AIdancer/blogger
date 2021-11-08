@@ -1,3 +1,93 @@
+### 前向星 & spfa & 负环
+```C++
+// POJ3259
+
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+const int N = 2000;
+const int M = 30000;
+
+int e_cnt;
+int F, n, m, w;
+int h[N], e[M], t[M], nxt[M];
+bool inqueue[N];
+int dis[N];
+int node_cnt[N];
+
+void add_edge(int u, int v, int w) {
+    e[e_cnt] = v;
+    t[e_cnt] = w;
+    nxt[e_cnt] = h[u];
+    h[u] = e_cnt++;
+}
+
+bool spfa_check(int source) {
+    queue<int> q;
+    memset(inqueue, 0, sizeof(inqueue));
+    memset(node_cnt, 0, sizeof(node_cnt));
+    q.push(source);
+    for (int i = 0; i <= n; i++) dis[i] = 0x1ffffff;
+    int u, v;
+    dis[source] = 0;
+    while (!q.empty()) {
+        u = q.front();
+        for (int i = h[u]; i != -1; i = nxt[i]) {
+            v = e[i];
+            if (dis[v] > dis[u] + t[i]) {
+                dis[v] = dis[u] + t[i];
+                if (!inqueue[v]) {
+                    q.push(v);
+                    inqueue[v] = true;
+                }
+            }
+        }
+        q.pop();
+        inqueue[u] = false;
+        node_cnt[u] += 1;
+        if (node_cnt[u] > n) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    scanf("%d", &F);
+    int s, e, t;
+    while (F--) {
+        memset(h, -1, sizeof(h));
+        e_cnt = 0;
+        scanf(" %d %d %d", &n, &m, &w);
+        for (int i = 0; i < m; i++) {
+            scanf(" %d %d %d", &s, &e, &t);
+            add_edge(s, e, t);
+            add_edge(e, s, t);
+        }
+        for (int i = 0; i < w; i++) {
+            scanf(" %d %d %d", &s, &e, &t);
+            add_edge(s, e, -t);
+        }
+        for (int i = 1; i <= n; i++) {
+            add_edge(0, i, 0);
+        }
+        if (spfa_check(0)) {
+            printf("YES\n");
+        }
+        else {
+            printf("NO\n");
+        }
+    }
+    return 0;
+}
+```
+
 
 ### C++优先队列 自定义比较函数
 ```C++
