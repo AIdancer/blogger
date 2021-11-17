@@ -57,6 +57,7 @@ int main() {
 	}
 	return 0;
 }
+
 ```
 
 ### 前向星 & spfa & 负环
