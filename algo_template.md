@@ -1,3 +1,64 @@
+### 二分图最大匹配 & 匈牙利算法
+```C++
+// POJ1274
+
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int N = 205;
+
+vector<int> g[N];
+int n, m;
+bool visited[N];
+int match[N];
+
+bool dfs(int u) {
+	for (int i = g[u].size() - 1; i >= 0; i--) {
+		int v = g[u][i];
+		if (!visited[v]) {
+			visited[v] = true;
+			if ((match[v] == -1) || dfs(match[v])) {
+				match[v] = u;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int get_max_match() {
+	memset(visited, false, sizeof(visited));
+	memset(match, -1, sizeof(match));
+	int ans = 0;
+	for (int i = 1; i <= n; i++) {
+		memset(visited, false, sizeof(visited));
+		if (dfs(i)) ans += 1;
+	}
+	return ans;
+}
+
+int main() {
+	int c, v;
+	while (scanf(" %d %d", &n, &m) != EOF) {
+		for (int i = 1; i < N; i++) g[i].clear();
+		for (int i = 1; i <= n; i++) {
+			scanf(" %d", &c);
+			while (c--) {
+				scanf(" %d", &v);
+				g[i].push_back(v);
+			}
+		}
+		int ans = get_max_match();
+		printf("%d\n", ans);
+	}
+	return 0;
+}
+```
+
 ### 前向星 & spfa & 负环
 ```C++
 // POJ3259
