@@ -1,3 +1,82 @@
+### 后缀数组
+```C++
+
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200005;
+const int maxn = 100005;
+
+int n, m;
+
+char s[maxn];
+int y[maxn], x[maxn], c[maxn], sa[maxn], rk[maxn], height[maxn], wt[30];
+
+void get_SA() {
+    for (int i = 1; i <= n; ++i) ++c[x[i] = s[i-1]];
+    //c数组是桶
+    //x[i]是第i个元素的第一关键字
+    for (int i = 2; i <= m; ++i) c[i] += c[i - 1];
+    //做c的前缀和，我们就可以得出每个关键字最多是在第几名
+    for (int i = n; i >= 1; --i) sa[c[x[i]]--] = i;
+    for (int k = 1; k <= n; k <<= 1) {
+        int num = 0;
+        for (int i = n - k + 1; i <= n; ++i) y[++num] = i;
+        //y[i]表示第二关键字排名为i的数，第一关键字的位置
+        //第n-k+1到第n位是没有第二关键字的 所以排名在最前面
+        for (int i = 1; i <= n; ++i) if (sa[i] > k) y[++num] = sa[i] - k;
+        //排名为i的数 在数组中是否在第k位以后
+        //如果满足(sa[i]>k) 那么它可以作为别人的第二关键字，就把它的第一关键字的位置添加进y就行了
+        //所以i枚举的是第二关键字的排名，第二关键字靠前的先入队
+        for (int i = 1; i <= m; ++i) c[i] = 0;
+        //初始化c桶
+        for (int i = 1; i <= n; ++i) ++c[x[i]];
+        //因为上一次循环已经算出了这次的第一关键字 所以直接加就行了
+        for (int i = 2; i <= m; ++i) c[i] += c[i - 1]; //第一关键字排名为1~i的数有多少个
+        for (int i = n; i >= 1; --i) sa[c[x[y[i]]]--] = y[i], y[i] = 0;
+        //因为y的顺序是按照第二关键字的顺序来排的
+        //第二关键字靠后的，在同一个第一关键字桶中排名越靠后
+        //基数排序
+        swap(x, y);
+        //这里不用想太多，因为要生成新的x时要用到旧的，就把旧的复制下来，没别的意思
+        x[sa[1]] = 1;
+        num = 1;
+        for (int i = 2; i <= n; ++i)
+            x[sa[i]] = (y[sa[i]] == y[sa[i - 1]] && y[sa[i] + k] == y[sa[i - 1] + k]) ? num : ++num;
+        //因为sa[i]已经排好序了，所以可以按排名枚举，生成下一次的第一关键字
+        if (num == n) break;
+        m = num;
+        //这里就不用那个122了，因为都有新的编号了
+    }
+}
+
+void test_case() {
+    scanf("%s", s);
+    n = strlen(s);
+    m = 300;
+    get_SA();
+    printf("%d", n);
+    for (int i = 1; i <= n; i++) printf(" %d", sa[i]-1);
+    printf("\n");
+}
+
+int main() {
+    test_case(); return 0;
+}
+
+
+```
+
 ### 二分图最大匹配 & 匈牙利算法
 ```C++
 // POJ1274
