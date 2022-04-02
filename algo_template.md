@@ -21,9 +21,8 @@ int n, m;
 
 char s[maxn];
 int y[maxn], x[maxn], c[maxn], sa[maxn], rk[maxn], height[maxn], wt[30];
-
 void get_SA() {
-    for (int i = 1; i <= n; ++i) ++c[x[i] = s[i-1]];
+    for (int i = 1; i <= n; ++i) ++c[x[i] = s[i - 1]];
     //c数组是桶
     //x[i]是第i个元素的第一关键字
     for (int i = 2; i <= m; ++i) c[i] += c[i - 1];
@@ -60,18 +59,34 @@ void get_SA() {
     }
 }
 
+// rk[i]表示i作为起始位置的后缀在所有后缀中的排名
+// height[i] = lcp(sa[i], sa[i-1])
+// height[rk[i]] >= height[rk[i-1]] - 1
+void get_height() {
+    int k = 0;
+    for (int i = 1; i <= n; ++i) rk[sa[i]] = i;
+    for (int i = 1; i <= n; ++i) {
+        if (rk[i] == 1) continue;//第一名height为0
+        if (k) --k;//h[i]>=h[i-1]-1;
+        int j = sa[rk[i] - 1];
+        // 字符串s起始位置为0
+        while (j + k <= n && i + k <= n && s[i + k - 1] == s[j + k - 1]) ++k;
+        height[rk[i]] = k;//h[i]=height[rk[i]];
+    }
+    for (int i = 1; i <= n; i++) printf("%d ", height[i]); printf("\n");
+}
+
 void test_case() {
     scanf("%s", s);
     n = strlen(s);
     m = 300;
     get_SA();
-    printf("%d", n);
-    for (int i = 1; i <= n; i++) printf(" %d", sa[i]-1);
-    printf("\n");
+    get_height();
 }
 
 int main() {
-    test_case(); return 0;
+    test_case(); 
+    return 0;
 }
 
 
