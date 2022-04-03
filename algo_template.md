@@ -1,3 +1,126 @@
+### 最大流dinic
+```C++
+
+#include <cassert>
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+
+const int INF = 0x7fffffff;
+const int N = 105;
+const int M = 20005;
+
+int h[N];
+int ecnt, u[M], v[M], w[M], nxt[M], depth[N];
+
+void init_graph() {
+    memset(h, -1, sizeof(h));
+    ecnt = 0;
+}
+
+void add_edge(int a, int b, int c) {
+    u[ecnt] = a; v[ecnt] = b; w[ecnt] = c; nxt[ecnt] = h[a]; h[a] = ecnt++;
+    u[ecnt] = b; v[ecnt] = a; w[ecnt] = 0; nxt[ecnt] = h[b]; h[b] = ecnt++;
+}
+
+bool dinic_bfs(int source, int end) {
+    queue<int> q;
+    memset(depth, -1, sizeof(depth));
+    depth[source] = 0;
+    q.push(source);
+    int a, b, c;
+    while (!q.empty()) {
+        a = q.front(); q.pop();
+        for (int i = h[a]; i != -1; i = nxt[i]) {
+            b = v[i];
+            c = w[i];
+            if ((depth[b] == -1) && (c > 0)) {
+                depth[b] = depth[a] + 1;
+                q.push(b);
+            }
+        }
+    }
+    if (depth[end] == -1) return false;
+    else return true;
+}
+
+int dinic_dfs(int source, int end, int maxflow) {
+    int temp_flow;
+    if (source == end) {
+        return maxflow;
+    }
+    int sum_flow = 0;
+    int a, b, c;
+    for (int i = h[source]; i != -1; i = nxt[i]) {
+        a = u[i]; b = v[i]; c = w[i];
+        if ((depth[b] == depth[a] + 1) && (c > 0)) {
+            temp_flow = dinic_dfs(b, end, min(maxflow - sum_flow, c));
+            if (temp_flow > 0) {
+                sum_flow += temp_flow;
+                w[i] -= temp_flow;
+                w[i ^ 1] += temp_flow;
+                if (maxflow == sum_flow) break;
+            }
+        }
+    }
+    return sum_flow;
+}
+
+int dinic(int source, int end) {
+    int ans = 0;
+    while (dinic_bfs(source, end)) {
+        int new_flow = 0;
+        while (new_flow = dinic_dfs(source, end, INF)) {
+            ans += new_flow;
+        }
+    }
+    return ans;
+}
+
+int m, n, P[1005], A, B, K, last[1005];
+
+void test_case() {
+    init_graph();
+    memset(last, -1, sizeof(last));
+    scanf(" %d %d", &m, &n);
+    for (int i = 1; i <= m; i++) scanf(" %d", P + i);
+    for (int i = 1; i <= n; i++) {
+        scanf(" %d", &A);
+        int sum_pig = 0;
+        for (int j = 1; j <= A; j++) {
+            scanf(" %d", &K);
+            if (last[K] == -1) {
+                sum_pig += P[K];
+            }
+            else {
+                add_edge(last[K], i, INF);
+            }
+            last[K] = i;
+        }
+        add_edge(0, i, sum_pig);
+        scanf(" %d", &B);
+        add_edge(i, n + 1, B);
+    }
+    int ans = dinic(0, n + 1);
+    printf("%d\n", ans);
+}
+
+int main() {
+    test_case();
+    return 0;
+}
+
+```
+
 ### 后缀数组
 ```C++
 
