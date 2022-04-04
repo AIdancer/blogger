@@ -1,3 +1,52 @@
+### 欧拉函数求解（包括筛法）
+```c++
+
+#include <cassert>
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200005;
+
+int phi[N];
+
+// 若gcd(a, m) == 1 则有 a^phi(m) mod m = 1
+
+int cal_phi(int n) {
+    // phi(n) = n * (p[1]-1)/p[1] * (p[2]-1)/p[2] * ... * (p[k]-1)/p[k]
+    int ans = n, temp = n;
+    for (int i = 2; i * i <= n; i++) {
+        if (temp % i == 0) {
+            ans = ans / i * (i - 1);
+            while (temp % i == 0) temp /= i;
+        }
+    }
+    if (temp > 1) ans = ans / temp * (temp - 1);
+    return ans;
+}
+
+void sieve_phi() {
+    for (int i = 1; i < N; i++) phi[i] = i;
+    for (int i = 2; i < N; i++) {
+        if (phi[i] == i) {
+            phi[i] = i - 1;
+            for (int j = i+i; j < N; j += i) {
+                phi[j] = phi[j] / i * (i - 1);
+            }
+        }
+    }
+}
+```
+
 ### 筛法求素数
 ```C++
 #include <cassert>
