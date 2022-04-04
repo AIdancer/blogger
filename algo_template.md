@@ -1,3 +1,34 @@
+### 筛法求素数
+```C++
+#include <cassert>
+#include <ctime>
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 20005;
+bool is_prime[N];
+
+void sieve_prime() {
+    memset(is_prime, true, sizeof(is_prime));
+    is_prime[1] = false;
+    for (int i = 2; i < N; i++) {
+        if (is_prime[i]) {
+            for (int j = i * i; j < N; j += i) is_prime[j] = false;
+        }
+    }
+}
+```
+
+
 ### 最大公约数|最小公倍数
 ```C++
 // 最大公约数
