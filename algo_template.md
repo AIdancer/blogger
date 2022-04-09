@@ -1,3 +1,40 @@
+### 扩展欧几里得 求解 ax+by=gcd(a,b)
+```c++
+#include <cassert>
+#include <ctime>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+int ext_gcd(int a, int b, int& x, int& y) {
+    int d;
+    if (b == 0) {
+        d = a;
+        x = 1; y = 0;
+        return d;
+    }
+    else {
+        d = ext_gcd(b, a % b, x, y);
+        int tx, ty;
+        tx = y;
+        ty = x - a / b * y;
+        x = tx; y = ty;
+        return d;
+    }
+}
+```
+
+
 ### 欧拉函数求解（包括筛法）
 ```c++
 
