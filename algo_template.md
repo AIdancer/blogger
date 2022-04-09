@@ -1,3 +1,56 @@
+### 扩展欧几里得 求解模线性方程 ax = b (mod n)
+```c++
+
+#include <cassert>
+#include <ctime>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+int ext_gcd(int a, int b, int& x, int& y) {
+    int d;
+    if (b == 0) {
+        d = a;
+        x = 1; y = 0;
+        return d;
+    }
+    else {
+        d = ext_gcd(b, a % b, x, y);
+        int tx, ty;
+        tx = y;
+        ty = x - a / b * y;
+        x = tx; y = ty;
+        return d;
+    }
+}
+
+void mod_equation(int a, int b, int n) {
+    int d, tx, ty, x0;
+    d = ext_gcd(a, n, tx, ty);
+    if (b % d == 0) {
+        x0 = tx * (b / d);
+        // 输出解系 
+        for (int i = 0; i < d; i++)
+            // a * x0 = b (mod n)  -->  a * (x0 + i * (n/d)) = b (mod n)
+            printf("%d ", x0 + i * (n / d));
+        printf("\n");
+    }
+    else {
+        printf("no solution\n");
+    }
+}
+```
+
 ### 扩展欧几里得 求解 ax+by=gcd(a,b)
 ```c++
 #include <cassert>
