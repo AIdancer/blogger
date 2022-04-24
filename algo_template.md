@@ -1,3 +1,73 @@
+### c++ multi使用
+```c++
+// codeforces 1672D
+// 注意multiset的erase(val)方法会删除所有值为val的数据，要想只删除一个，需要find到iterator，然后erase(iterator)
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+using std::max;
+using std::min;
+
+
+typedef long long LL;
+
+const int N = 200005;
+
+int n, a[N], b[N];
+
+void init_all() {
+    
+}
+
+void test_case(int case_num) {
+    scanf(" %d", &n);
+    multiset<int> free_num;
+    multiset<int>::iterator it;
+    for (int i = 0; i < n; i++) scanf(" %d", a + i);
+    for (int i = 0; i < n; i++) scanf(" %d", b + i);
+    int i = n-1, j = n-1;
+    bool flag = true;
+    while (i >= 0 && j >= 0) {
+        while (j - 1 >= 0 && (b[j] == b[j - 1])) {
+            free_num.insert(b[j]);
+            --j;
+        }
+        if (a[i] == b[j]) {
+            --i;
+            --j;
+        }
+        else {
+            it = free_num.find(a[i]);
+            if (it == free_num.end()) {
+                flag = false;
+                break;
+            }
+            else {
+                free_num.erase(it);
+                --i;
+            }
+        }
+    }
+    if (flag) printf("yes\n");
+    else printf("no\n");
+}
+
+int main() {
+    init_all();
+    int t;
+    scanf("%d", &t);
+    for (int i = 1; i <= t; i++)
+        test_case(i);
+    return 0;
+}
+```
+
+
 ### 扩展欧几里得 求解模线性方程 ax = b (mod n)
 ```c++
 
