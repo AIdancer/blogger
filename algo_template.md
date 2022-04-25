@@ -1,4 +1,4 @@
-### c++ multi使用
+### c++ multi set使用
 ```c++
 // codeforces 1672D
 // 注意multiset的erase(val)方法会删除所有值为val的数据，要想只删除一个，需要find到iterator，然后erase(iterator)
