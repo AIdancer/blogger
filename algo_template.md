@@ -371,7 +371,8 @@ const double pi = atan(1) * 4;
 
 const int N = 10005;
 
-// n为点数，m为边数，top为栈指针，dcnt控制深度遍历顺序，scnt为强连通分量计数器，s为栈，scc[i]表示顶点i所属强连通分量，scc_sz[k]表示第k个强连通分量大小
+// n为点数，m为边数，top为栈指针，dcnt控制深度遍历顺序，scnt为强连通分量计数器，s为栈
+// scc[i]表示顶点i所属强连通分量，scc_sz[k]表示第k个强连通分量大小
 int n, m, top, dcnt, scnt, d[N], low[N], s[N], scc[N], scc_sz[N];
 bool instack[N]; // instack用于判断dfs过程中，某个节点是否已在栈s中，用于判断当前边是否通向父节点或者父节点子环。
 vector<int> g[N];
