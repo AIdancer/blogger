@@ -118,10 +118,6 @@ const int N = 200005;
 
 int n, a[N], b[N];
 
-void init_all() {
-    
-}
-
 void test_case(int case_num) {
     scanf(" %d", &n);
     multiset<int> free_num;
@@ -156,7 +152,6 @@ void test_case(int case_num) {
 }
 
 int main() {
-    init_all();
     int t;
     scanf("%d", &t);
     for (int i = 1; i <= t; i++)
