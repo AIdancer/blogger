@@ -346,6 +346,147 @@ int lcm(int a, int b) {
 }
 ```
 
+### 强连通分量|poj2186
+```python
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+using std::max;
+using std::min;
+
+
+typedef long long LL;
+
+const double pi = atan(1) * 4;
+
+const int N = 10005;
+
+// n为点数，m为边数，top为栈指针，dcnt控制深度遍历顺序，scnt为强连通分量计数器，s为栈，scc[i]表示顶点i所属强连通分量，scc_sz[k]表示第k个强连通分量大小
+int n, m, top, dcnt, scnt, d[N], low[N], s[N], scc[N], scc_sz[N];
+bool instack[N]; // instack用于判断dfs过程中，某个节点是否已在栈s中，用于判断当前边是否通向父节点或者父节点子环。
+vector<int> g[N];
+
+vector<int> g2[N];
+int in[N];
+bool visit[N];
+
+void tarjan(int u) {
+    d[u] = low[u] = ++dcnt;
+    instack[u] = true;
+    s[++top] = u;
+    int sz = g[u].size(), v;
+    for (int i = 0; i < sz; i++) {
+        v = g[u][i];
+        if (!d[v]) {
+            tarjan(v);
+            low[u] = min(low[u], low[v]);
+        }
+        else {
+            if (instack[v]) {
+                low[u] = min(low[u], d[v]);
+            }
+        }
+    }
+    if (d[u] == low[u]) {
+        ++scnt;
+        scc_sz[scnt] = 0;
+        while (s[top] != u) {
+            v = s[top];
+            scc[v] = scnt;
+            ++scc_sz[scnt];
+            instack[v] = false;
+            --top;
+        }
+        v = s[top];
+        scc[v] = scnt;
+        ++scc_sz[scnt];
+        instack[v] = false;
+        --top;
+    }
+}
+
+void dfs(int u) {
+    int sz = g2[u].size(), v;
+    visit[u] = true;
+    for (int i = 0; i < sz; i++) {
+        v = g2[u][i];
+        if (!visit[v]) {
+            dfs(v);
+        }
+    }
+}
+
+void test_case(int case_num) {
+    int a, b;
+    scanf(" %d %d", &n, &m);
+    for (int i = 0; i < m; i++) {
+        scanf(" %d %d", &a, &b);
+        g[a].push_back(b);
+    }
+    dcnt = 0; top = 0; scnt = 0;
+    for (int i = 1; i <= n; i++) { d[i] = 0; instack[i] = false; }
+    for (int i = 1; i <= n; i++) {
+        if (d[i] == 0)
+            tarjan(i);
+    }
+    for (int i = 1; i <= scnt; i++) {
+        in[i] = 0;
+        visit[i] = false;
+    }
+    for (int i = 1; i <= n; i++) {
+        int sz = g[i].size();
+        a = i;
+        for (int j = 0; j < sz; j++) {
+            b = g[i][j];
+            if (scc[a] != scc[b]) {
+                g2[scc[b]].push_back(scc[a]);
+                ++in[scc[a]];
+            }
+        }
+    }
+    int ccnt = 0, source;
+    for (int i = 1; i <= scnt; i++) {
+        if (in[i] == 0) {
+            source = i;
+            ++ccnt;
+        }
+    }
+    if (ccnt > 1 || ccnt == 0) {
+        printf("0\n");
+        return;
+    }
+    dfs(source);
+    bool flag = true;
+    for (int i = 1; i <= scnt; i++) {
+        if (!visit[i]) {
+            flag = false;
+            break;
+        }
+    }
+    if (!flag) {
+        printf("0\n");
+    }
+    else {
+        printf("%d\n", scc_sz[source]);
+    }
+}
+
+int main() {
+    test_case(0);
+    return 0;
+}
+```
+
 
 ### 最大流dinic
 ```C++
