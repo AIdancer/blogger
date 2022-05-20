@@ -1,3 +1,101 @@
+### 线段树 codeforces|Stone Age Problem
+```c++
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+ 
+using namespace std;
+ 
+typedef long long LL;
+ 
+const int N = 200005;
+ 
+struct node {
+    LL sum;
+    int lazy;
+    int l, r;
+} tree[N<<2];
+ 
+int n, q, a[N];
+ 
+void build(int u, int l, int r) {
+    tree[u].l = l;
+    tree[u].r = r;
+    if (l == r) {
+        tree[u].sum = a[l];
+        tree[u].lazy = a[l];
+        return;
+    }
+    int lch, rch;
+    lch = u << 1;
+    rch = lch + 1;
+    int mid = (l+r) >> 1;
+    build(lch, l, mid);
+    build(rch, mid+1, r);
+    tree[u].lazy = -1;
+    tree[u].sum = tree[lch].sum + tree[rch].sum;
+}
+ 
+void update(int u, int l, int r, int val) {
+    if (tree[u].l == l && tree[u].r == r) {
+        tree[u].sum = LL(val) * (r - l + 1);
+        tree[u].lazy = val;
+        return;
+    } else {
+        int lch, rch;
+        lch = u << 1;
+        rch = lch + 1;
+        int mid = (tree[u].l + tree[u].r) >> 1;
+        if (tree[u].lazy != -1) {
+            update(lch, tree[lch].l, tree[lch].r, tree[u].lazy);
+            update(rch, tree[rch].l, tree[rch].r, tree[u].lazy);
+            tree[u].lazy = -1;
+        }
+        if (r <= mid) {
+            update(lch, l, r, val);
+        } else if (l > mid) {
+            update(rch, l, r, val);
+        } else {
+            update(lch, l, mid, val);
+            update(rch, mid+1, r, val);
+        }
+        tree[u].sum = tree[lch].sum + tree[rch].sum;
+    }
+}
+ 
+void test_case(int t) {
+    int tt, pos, x;
+    scanf(" %d %d", &n, &q);
+    for (int i = 1; i <= n; i++) scanf(" %d", a+i);
+    build(1, 1, n);
+    while (q--) {
+        scanf(" %d", &tt);
+        if (tt == 1) {
+            scanf(" %d %d", &pos, &x);
+            update(1, pos, pos, x);
+        } else if (tt == 2) {
+            scanf(" %d", &x);
+            update(1, 1, n, x);
+        }
+        printf("%lld\n", tree[1].sum);
+    }
+}
+ 
+int main(int argc, const char * argv[]) {
+    test_case(0);
+    return 0;
+}
+```
+
+
 ### c++ multi set使用
 ```c++
 // codeforces 1672D
