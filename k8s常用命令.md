@@ -3,6 +3,11 @@
 kubectl get pod -n namespace
 ```
 
+### 打印pod日志
+```
+kubectl -n namespace logs -f pod_name -c container_name
+```
+
 ### 查看pod中所有容器
 ```
 #不包括init容器
