@@ -5,3 +5,8 @@
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.io,direct
 ```
+
+### go语言学习实例(go examples)
+```
+https://gobyexample.com/
+```
