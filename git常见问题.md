@@ -1,10 +1,16 @@
 ### git合并master分支所有commit
 ```bash
+# 初始化一个新的本地分支（不继承master）
 git checkout --orphan latest_branch
+# 添加所有文件
 git add -A
+# 添加commit信息
 git commit -am "new version"
+# 删除本地master分支
 git branch -D master
+# 将当前分支重命名为master分支
 git branch -m master
+# 用本地当前master分支覆盖远程master分支
 git push -f origin master
 ```
 
