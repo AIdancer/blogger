@@ -1,3 +1,13 @@
+### git合并master分支所有commit
+```bash
+git checkout --orphan latest_branch
+git add -A
+git commit -am "new version"
+git branch -D master
+git branch -m master
+git push -f origin master
+```
+
 #### 错误"Please move or remove them before you merge. Aborting Updating 251d632..4f9078d"
 ```bash
 解决：
