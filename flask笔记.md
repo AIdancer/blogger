@@ -16,7 +16,10 @@ return json.dumps(rt_dict, ensure_ascii=False)
 如何寻找静态文件
 ---------------
 ```
-Create the static path whenever you want it inside your project. In my case I placed it in /root_folder/frontend/static for the static files and /root_folder/frontend/templates for my templates, then I passed the routes to the constructor, like this:
+Create the static path whenever you want it inside your project. 
+In my case I placed it in /root_folder/frontend/static for the static files 
+and /root_folder/frontend/templates for my templates, 
+then I passed the routes to the constructor, like this:
 
 app = Flask(__name__, template_folder='../frontend/templates', 
 static_folder='../frontend/static/')
