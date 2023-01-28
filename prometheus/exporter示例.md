@@ -124,3 +124,6 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9182", "localhost:8088"]
 ```
+
+- - - - - - - -
+更多详情可以参考该篇博客：https://blog.csdn.net/u012140251/article/details/120201215
