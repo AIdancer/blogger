@@ -1,3 +1,8 @@
+### 从指定远程分支checkout一个新分支
+```bash
+git checkout -b master origin/master
+```
+
 ### git合并master分支所有commit
 ```bash
 # 初始化一个新的本地分支（不继承master）
