@@ -1,6 +1,6 @@
 ### 使用ssd操作git
 ```bash
- ssh-keygen -t ed1234 -C "your_email@example.com"
+ ssh-keygen -t ed25519 -C "your_email@example.com"
  将生成的pub内容复制到git setting的ssh key
  $ ssh -T git@github.com  测试成功后即可使用
 ```
