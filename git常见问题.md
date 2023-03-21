@@ -1,3 +1,11 @@
+### 使用ssd操作git
+```bash
+ ssh-keygen -t ed1234 -C "your_email@example.com"
+ 将生成的pub内容复制到git setting的ssh key
+ $ ssh -T git@github.com  测试成功后即可使用
+```
+
+
 ### 从指定远程分支checkout一个新分支
 ```bash
 git checkout -b master origin/master
