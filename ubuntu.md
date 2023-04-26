@@ -69,3 +69,15 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
 ```
+**编辑interfaces**  
+```
+ sudo vim /etc/network/interfaces
+ 
+auto eno8403
+iface eno8403 inet static
+address 192.168.31.92
+gateway 192.168.31.1
+netmask 255.255.255.0
+dns-nameserver 192.168.31.1
+
+```
