@@ -3,6 +3,31 @@ pip install jupyter
 pip install ipython
 ```
 
+### 修改jupyter notebook允许远程访问
+```
+from notebook.auth import passwd
+passwd()   #设置自己的密码，然后两次输入确认生成加密字符串
+
+
+# 退出python环境，把生成的字符串复制下来，后面配置要用，然后生成jupyter配置文件，并配置：
+jupyter notebook --generate-config
+vim ~/.jupyter/jupyter_notebook_config.py
+
+
+# 写入以下配置
+c.NotebookApp.allow_remote_access = True  #允许远程访问
+c.NotebookApp.allow_root = True          #允许root访问
+c.NotebookApp.ip='*'                     # 所有ip皆可访问  
+c.NotebookApp.password = '上面复制的那个字符串''    
+c.NotebookApp.open_browser = False       # 禁止自动打开浏览器  
+c.NotebookApp.port =8888                 # 端口
+c.NotebookApp.notebook_dir = '设置Notebook启动进入的目录' 
+
+# 重启jupyter
+jupyter notebook
+
+```
+
 ### 修改jupyter默认密码
     jupyter notebook password
    
