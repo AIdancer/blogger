@@ -4,7 +4,7 @@ pip install ipython
 ```
 
 ### 修改jupyter notebook允许远程访问
-```
+```python
 from notebook.auth import passwd
 passwd()   #设置自己的密码，然后两次输入确认生成加密字符串
 
