@@ -26,7 +26,6 @@ const int N = 200005;
 int num[100000];
 
 int partition(int a[], int low, int high) {
-    if (low >= high) return low;
     int key, i, j;
     key = a[low];
     i = low;
@@ -42,10 +41,11 @@ int partition(int a[], int low, int high) {
 }
 
 void quick_sort(int a[], int low, int high) {
+    if (low >= high) return;
     int mid;
     mid = partition(a, low, high);
-    if (low < mid-1) quick_sort(a, low, mid - 1);
-    if (mid+1 < high) quick_sort(a, mid + 1, high);
+    quick_sort(a, low, mid - 1);
+    quick_sort(a, mid + 1, high);
 }
 
 void solve() {
