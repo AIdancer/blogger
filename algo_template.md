@@ -1,3 +1,70 @@
+### 手撸快速排序
+```c++
+# define _CRT_SECURE_NO_WARNINGS
+
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <stack>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200005;
+
+int num[100000];
+
+int partition(int a[], int low, int high) {
+    if (low >= high) return low;
+    int key, i, j;
+    key = a[low];
+    i = low;
+    j = high;
+    while (i < j) {
+        while ((i < j) && (a[j] >= key)) j--;
+        if (i < j) a[i] = a[j];
+        while ((i < j) && (a[i] <= key)) i++;
+        if (i < j) a[j] = a[i];
+    }
+    a[i] = key;
+    return i;
+}
+
+void quick_sort(int a[], int low, int high) {
+    int mid;
+    mid = partition(a, low, high);
+    if (low < mid-1) quick_sort(a, low, mid - 1);
+    if (mid+1 < high) quick_sort(a, mid + 1, high);
+}
+
+void solve() {
+    int n = 30;
+    for (int i = 0; i < n; i++)
+        num[i] = rand() % 50;
+    printf("origin:\n");
+    for (int i = 0; i < n; i++) printf("%d ", num[i]); printf("\n");
+    quick_sort(num, 0, n-1);
+    printf("sorted:\n");
+    for (int i = 0; i < n; i++) printf("%d ", num[i]); printf("\n");
+}
+
+int main() {
+    solve();
+    return 0;
+}
+```
+
 ### 线段树 codeforces|Stone Age Problem
 ```c++
 #include <cassert>
