@@ -20,7 +20,7 @@ if __name__ == "__main__":
         cout.write(response.text)
 ```
 
-### 爬财联社电报
+### 爬财联社电报（筛选关键词）
 ```python
 import datetime as dt
 import logging
