@@ -1,3 +1,8 @@
+### ubuntu设置虚拟机全屏
+```bash
+sudo apt install open-vm*
+```
+
 ### ubuntu设置固定ip
 **安装ifupdown**  
 ```
