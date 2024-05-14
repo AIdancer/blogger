@@ -3,6 +3,17 @@ pip install jupyter
 pip install ipython
 ```
 
+### jupyter lab自动提示
+```bash
+pip install jupyter-lsp
+
+pip install python-lsp-server[all]
+
+启动jupyer lab并安装插件jupyterlab-lsp
+
+在setting editor中将code completion相关选项打开
+```
+
 ### 修改jupyter notebook允许远程访问
 ```python
 from notebook.auth import passwd
