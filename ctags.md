@@ -8,4 +8,5 @@
 ### 加载tags文件
 ```bash
 set tags=tags_file;
+set tags+=another_tgas_file;
 ```
