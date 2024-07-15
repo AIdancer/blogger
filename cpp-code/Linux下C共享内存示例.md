@@ -59,6 +59,11 @@ int main() {
     } else {
         wait(NULL);
         read_from_shared_memory(key, shm_id);
+        // 删除共享内存段
+        if (shmctl(shm_id, IPC_RMID, NULL) == -1) {
+            perror("shmctl failed");
+            exit(1);
+        }
     }
     return 0;
 }
