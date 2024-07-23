@@ -65,6 +65,27 @@ int main() {
 }
 ```
 
+### 求第k大数
+```C++
+unsigned int a[250005];
+
+unsigned int select_k(unsigned int a[], int l, int r, int index) {
+    if (l == r) return a[l];
+    int i = l, j = r;
+    unsigned int x = a[l];
+    while (i < j) {
+        while ((x <= a[j]) && (i < j)) j--;
+        a[i] = a[j];
+        while ((x >= a[i]) && (i < j)) i++;
+        a[j] = a[i];
+    }
+    a[i] = x;
+    if (i == index) return a[i];
+    else if (i < index) return select_k(a, i + 1, r, index);
+    else return select_k(a, l, i - 1, index);
+}
+```
+
 ### 线段树 codeforces|Stone Age Problem
 ```c++
 #include <cassert>
