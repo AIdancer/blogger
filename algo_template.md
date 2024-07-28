@@ -65,7 +65,100 @@ int main() {
 }
 ```
 
-### Tarjan求解LCA | ural1471
+### ST表|RMQ求解LCA | ural 1471
+```c++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 50005;
+
+int n, m;
+int depth[N];
+int first[N];
+bool visit[N];
+vector<int> nodes, vals;
+vector<pair<int, int>> g[N];
+int dp[N*2][17];
+
+void dfs(int u, int d) {
+    visit[u] = true;
+    depth[u] = d;
+    nodes.push_back(u);
+    vals.push_back(d);
+    int sz = g[u].size();
+    pair<int, int> v;
+    for (int i = 0; i < sz; i++) {
+        v = g[u][i];
+        if (visit[v.first]) continue;
+        dfs(v.first, d + v.second);
+        nodes.push_back(u);
+        vals.push_back(d);
+    }
+}
+
+void solve() {
+    int a, b, w;
+    scanf("%d", &n);
+    for (int i = 1; i < n; i++) {
+        scanf(" %d %d %d", &a, &b, &w);
+        g[a].push_back(make_pair(b, w));
+        g[b].push_back(make_pair(a, w));
+    }
+    memset(first, -1, sizeof(first));
+    memset(visit, false, sizeof(visit));
+    dfs(0, 0);
+    int count = nodes.size();
+    for (int i = 0; i < count; i++) {
+        if (first[nodes[i]] == -1)
+            first[nodes[i]] = i;
+    }
+    int maxk = (int)(floor(log2(count)) + 1e-7);
+    for (int i = 0; i < count; i++) dp[i][0] = vals[i];
+    for (int k = 1; k <= maxk; k++) {
+        for (int i = 0; i + (1 << k) - 1 < count; i++) {
+            dp[i][k] = min(dp[i][k - 1], dp[i + (1 << (k - 1))][k - 1]);
+        }
+    }
+    scanf(" %d", &m);
+    for (int i = 0; i < m; i++) {
+        scanf(" %d %d", &a, &b);
+        if (a == b) {
+            printf("0\n");
+            continue;
+        }
+        int l = min(first[a], first[b]);
+        int r = max(first[a], first[b]);
+        int k = (int)(floor(log2(r - l + 1)) + 1e-7);
+        int mindepth = min(dp[l][k], dp[r - (1 << k) + 1][k]);
+        int ans = depth[a] + depth[b] - mindepth * 2;
+        printf("%d\n", ans);
+    }
+}
+
+int main(int argc, const char* argv[]) {
+    solve();
+    return 0;
+}
+```
+
+### Tarjan求解LCA | ural 1471
 ```C++
 #define _CRT_SECURE_NO_WARNINGS
 
