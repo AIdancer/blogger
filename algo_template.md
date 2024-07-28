@@ -65,6 +65,108 @@ int main() {
 }
 ```
 
+### Tarjan求解LCA | ural1471
+```C++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 50005;
+
+int n, m;
+int depth[N];
+bool visit[N];
+vector<pair<int, int>> g[N];
+vector<int> querys[N];
+map<pair<int, int>, int> res;
+vector<pair<int, int>> query_records;
+
+int fa[N];
+
+int get_father(int x) {
+    if (fa[x] != x)
+        fa[x] = get_father(fa[x]);
+    return fa[x];
+}
+
+void union_set(int x, int y) {
+    int fax, fay;
+    fax = get_father(x);
+    fay = get_father(y);
+    if (fax != fay) {
+        fa[fay] = fax;
+    }
+}
+
+void tarjan(int u, int p, int d) {
+    depth[u] = d;
+    int ch_size = g[u].size();
+    pair<int, int> v;
+    for (int i = 0; i < ch_size; i++) {
+        v = g[u][i];
+        if (v.first == p) continue;
+        tarjan(v.first, u, d + v.second);
+        union_set(u, v.first);
+    }
+    visit[u] = true;
+    ch_size = querys[u].size();
+    int node_v;
+    for (int i = 0; i < ch_size; i++) {
+        node_v = querys[u][i];
+        if (visit[node_v]) {
+            int lca = get_father(node_v);
+            int ans = depth[u] + depth[node_v] - depth[lca] * 2;
+            res[make_pair(u, node_v)] = ans;
+            res[make_pair(node_v, u)] = ans;
+        }
+    }
+}
+
+void solve() {
+    int a, b, w;
+    scanf("%d", &n);
+    for (int i = 1; i < n; i++) {
+        scanf(" %d %d %d", &a, &b, &w);
+        g[a].push_back(make_pair(b, w));
+        g[b].push_back(make_pair(a, w));
+    }
+    scanf(" %d", &m);
+    for (int i = 0; i < m; i++) {
+        scanf(" %d %d", &a, &b);
+        querys[a].push_back(b);
+        querys[b].push_back(a);
+        query_records.push_back(make_pair(a, b));
+    }
+    for (int i = 0; i < n; i++) fa[i] = i;
+    for (int i = 0; i < n; i++) visit[i] = false;
+    tarjan(0, -1, 0);
+    for (int i = 0; i < m; i++) {
+        printf("%d\n", res[query_records[i]]);
+    }
+}
+
+int main(int argc, const char* argv[]) {
+    solve();
+    return 0;
+}
+```
+
 ### 求第k大数
 ```C++
 unsigned int a[250005];
