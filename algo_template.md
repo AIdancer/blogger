@@ -65,6 +65,215 @@ int main() {
 }
 ```
 
+### 大根堆|ural1650
+```c++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 10005;
+
+struct People {
+    int name_id, city_id;
+    LL fortune;
+}bilons[10005];
+
+struct Travel {
+    int day, name_id, city_id;
+};
+
+bool operator < (const Travel& t1, const Travel& t2) {
+    return t1.day < t2.day;
+}
+
+struct Node {
+    int city;
+    LL score;
+};
+int heap_size;
+vector<Node> heaps;
+
+int n, m, k;
+int n_name, n_city;
+map<string, int> name2id;
+map<string, int> city2id;
+map<int, string> id2name;
+map<int, string> id2city;
+
+map<int, LL> scores;
+map<int, LL> money;
+vector<Travel> travels;
+map<int, int> city_pos;
+map<int, int> person_pos;
+map<int, int> result;
+
+void adjust(int u, int n_heap, int tag) {
+    // tag为0则向上调整, tag为1则向下调整
+    if (tag == 0) {
+        int p = u / 2;
+        if ((u & 1) == 0) --p;
+        while (p >= 0) {
+            if (heaps[p].score < heaps[u].score) {
+                swap(city_pos[heaps[p].city], city_pos[heaps[u].city]);
+                swap(heaps[p], heaps[u]);
+                u = p;
+                p = u / 2;
+                if ((u & 1) == 0) --p;
+            }
+            else break;
+        }
+    }
+    else if (tag == 1) {
+        int i = u * 2 + 1;
+        while (i < n_heap) {
+            if ((i + 1 < n_heap) && (heaps[i].score < heaps[i + 1].score)) ++i;
+            if (heaps[u].score < heaps[i].score) {
+                swap(city_pos[heaps[i].city], city_pos[heaps[u].city]);
+                swap(heaps[u], heaps[i]);
+                u = i;
+                i = u * 2 + 1;
+            }
+            else break;
+        }
+    }
+}
+
+void build_heap() {
+    int n_heap = heaps.size();
+    for (int i = n_heap / 2 - 1; i >= 0; i--) {
+        adjust(i, n_heap, 1);
+    }
+}
+
+void solve() {
+    int day;
+    char name[25], city[25];
+    n_name = 0;
+    n_city = 0;
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        scanf(" %s %s %lld", name, city, &bilons[i].fortune);
+        if (name2id.find(name) == name2id.end()) {
+            name2id[name] = n_name;
+            id2name[n_name] = name;
+            bilons[i].name_id = n_name;
+            n_name++;
+        }
+        if (city2id.find(city) == city2id.end()) {
+            city2id[city] = n_city;
+            id2city[n_city] = city;
+            bilons[i].city_id = n_city;
+            n_city++;
+        }
+        int cid = city2id[city];
+        int nid = name2id[name];
+        person_pos[nid] = cid;
+        if (scores.find(cid) == scores.end()) scores[cid] = 0;
+        scores[cid] += bilons[i].fortune;
+        money[nid] = bilons[i].fortune;
+    }
+    int name_id, city_id;
+    scanf(" %d %d", &m, &k);
+    for (int i = 0; i < k; i++) {
+        scanf(" %d %s %s", &day, name, city);
+        name_id = name2id[name];
+        if (city2id.find(city) == city2id.end()) {
+            city2id[city] = n_city;
+            id2city[n_city] = city;
+            n_city++;
+        }
+        city_id = city2id[city];
+        Travel travel;
+        travel.day = day;
+        travel.name_id = name_id;
+        travel.city_id = city_id;
+        travels.push_back(travel);
+    }
+    sort(travels.begin(), travels.end());
+    heap_size = city2id.size();
+    for (auto it = city2id.begin(); it != city2id.end(); it++) {
+        int cid = it->second;
+        Node node;
+        node.city = cid;
+        if (scores.find(cid) != scores.end()) {
+            node.score = scores[cid];
+        }
+        else {
+            node.score = 0;
+        }
+        heaps.push_back(node);
+    }
+    build_heap();
+    for (int i = 0; i < heap_size; i++) {
+        city_pos[heaps[i].city] = i;
+    }
+    int sz_travel = travels.size();
+    int cur = 0;
+    for (int i = 0; i < sz_travel; i++) {
+        Travel t = travels[i];
+        if (t.day > cur) {
+            LL mmax = -1;
+            if (heap_size >= 2) mmax = heaps[1].score;
+            if (heap_size >= 3) mmax = max(mmax, heaps[2].score);
+            if (heaps[0].score > mmax) {
+                int city = heaps[0].city;
+                if (result.find(city) == result.end()) result[city] = 0;
+                result[city] += t.day - cur;
+            }
+            cur = t.day;
+        }
+        int pp = person_pos[t.name_id];
+        // 离开城市财富下降
+        heaps[city_pos[pp]].score -= money[t.name_id];
+        adjust(city_pos[pp], heap_size, 1);
+        // 进入城市财富上升
+        heaps[city_pos[t.city_id]].score += money[t.name_id];
+        adjust(city_pos[t.city_id], heap_size, 0);
+        person_pos[t.name_id] = t.city_id;
+    }
+    if (cur != m) {
+        LL mmax = -1;
+        if (heap_size >= 2) mmax = heaps[1].score;
+        if (heap_size >= 3) mmax = max(mmax, heaps[2].score);
+        if (heaps[0].score > mmax) {
+            int city = heaps[0].city;
+            if (result.find(city) == result.end()) result[city] = 0;
+            result[city] += m - cur;
+        }
+    }
+    vector<pair<string, int>> ans;
+    for (auto val : result) {
+        ans.push_back(make_pair(id2city[val.first], val.second));
+    }
+    sort(ans.begin(), ans.end());
+    for (auto val : ans) {
+        printf("%s %d\n", val.first.c_str(), val.second);
+    }
+}
+
+int main(int argc, const char* argv[]) {
+    freopen("data.in", "r", stdin);
+    solve();
+    return 0;
+}
+```
+
 ### ST表|RMQ求解LCA | ural 1471
 ```c++
 #define _CRT_SECURE_NO_WARNINGS
