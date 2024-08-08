@@ -90,3 +90,19 @@ if __name__ == "__main__":
     res = es.search(index="stocks_tag", body=body)
     print(res)
 ```
+
+### 删除数据demo
+```python
+import datetime as dt
+import elasticsearch.helpers
+from elasticsearch import Elasticsearch
+
+if __name__ == "__main__":
+    es = Elasticsearch("http://192.168.31.91:9200")
+    query = {
+        "query" : {
+            "match_all" : {}
+        }
+    }
+    es.delete_by_query(index="stocks_tag", body=query)
+```
