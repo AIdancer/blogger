@@ -1,4 +1,6 @@
 ### ubuntu安装es
+文档:https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
+
 ```bash
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
 
