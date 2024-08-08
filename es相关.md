@@ -19,6 +19,11 @@ sudo systemctl stop elasticsearch.service
 
 ```
 
+### 参考查询资料
+```
+https://www.cnblogs.com/ExMan/p/11323984.html
+```
+
 ### 关于中文查询
 ES会默认对中文的每个字符进行分词，因此中文查询时需要使用bool + must + term
 
