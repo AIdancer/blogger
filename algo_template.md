@@ -65,6 +65,95 @@ int main() {
 }
 ```
 
+### 树状数组|hdu1166
+```c++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 100000;
+
+int n, c[N];
+
+
+int lowbit(int x) {
+    return x & -x;
+}
+
+void add(int x, int k) {
+    while (x <= n) {
+        c[x] = c[x] + k;
+        x += lowbit(x);
+    }
+}
+
+int getsum(int x) {
+    int ans = 0;
+    while (x > 0) {
+        ans += c[x];
+        x = x - lowbit(x);
+    }
+    return ans;
+}
+
+void solve() {
+    int T;
+    int x, index, l, r;
+    char opt[16];
+    scanf("%d", &T);
+    for (int t = 1; t <= T; t++) {
+        scanf(" %d", &n);
+        for (int i = 1; i <= n; i++) c[i] = 0;
+        for (int i = 1; i <= n; i++) {
+            scanf(" %d", &x);
+            add(i, x);
+        }
+        printf("Case %d:\n", t);
+        while (true) {
+            scanf(" %s", opt);
+            if (strcmp(opt, "Query") == 0) {
+                scanf(" %d %d", &l, &r);
+                int ans = getsum(r) - getsum(l - 1);
+                printf("%d\n", ans);
+            }
+            else if (strcmp(opt, "Add") == 0) {
+                scanf(" %d %d", &index, &x);
+                add(index, x);
+            }
+            else if (strcmp(opt, "Sub") == 0) {
+                scanf(" %d %d", &index, &x);
+                add(index, -x);
+            }
+            else if (strcmp(opt, "End") == 0) {
+                break;
+            }
+        }
+    }
+}
+
+int main(int argc, const char* argv[]) {
+    freopen("data.in", "r", stdin);
+    solve();
+    return 0;
+}
+```
+
 ### 大根堆|ural1650
 ```c++
 #define _CRT_SECURE_NO_WARNINGS
