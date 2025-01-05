@@ -1,3 +1,8 @@
+### MinGW下载器地址
+```bash
+https://sourceforge.net/projects/mingw/files/
+```
+
 ### 输出wstring中文
 ```c++
 #define _CRT_SECURE_NO_WARNINGS
