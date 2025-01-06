@@ -3,6 +3,29 @@
 https://sourceforge.net/projects/mingw/files/
 ```
 
+### vscode设置mingw编译
+ctrl+shift+p，设置cpp json，内容如下：  
+```bash
+{
+  "configurations": [
+    {
+      "name": "windows-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "compilerPath": "D:/app/msys64/mingw64/bin/gcc.exe",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "windows-gcc-x64",
+      "compilerArgs": [
+        ""
+      ]
+    }
+  ],
+  "version": 4
+}
+```
+
 ### 输出wstring中文
 ```c++
 #define _CRT_SECURE_NO_WARNINGS
