@@ -4,7 +4,7 @@ https://sourceforge.net/projects/mingw/files/
 ```
 
 ### vscode设置mingw编译
-ctrl+shift+p，设置cpp json，内容如下：  
+ctrl+shift+p，设置cpp json中的compilerPath，内容示例如下，根据gcc/g++路径修改即可   
 ```bash
 {
   "configurations": [
