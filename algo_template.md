@@ -65,6 +65,117 @@ int main() {
 }
 ```
 
+### floyd求最小环ural1004
+```C++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <cstdio>
+#include <cstdio>
+#include <cstring>
+
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+const int N = 105;
+
+int n, m, dis[N][N], w[N][N], mid[N][N];
+vector<int> route;
+bool visited[N];
+
+void find_path(int u, int v) {
+	if (mid[u][v] == -1) {
+		if (!visited[u]) { route.push_back(u); visited[u] = true; }
+		if (!visited[v]) { route.push_back(v); visited[v] = true; }
+		return;
+	}
+	else {
+		find_path(u, mid[u][v]);
+		find_path(mid[u][v], v);
+	}
+}
+
+int main(int argc, char * argv[]) {
+	freopen("data.in", "r", stdin);
+	int a, b, l;
+	while (scanf(" %d", &n) != EOF) {
+		if (n == -1) break;
+		scanf(" %d", &m);
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (i == j) {
+					dis[i][j] = 0;
+					w[i][j] = 0;
+				}
+				else {
+					dis[i][j] = -1;
+					w[i][j] = -1;
+				}
+				mid[i][j] = -1;
+			}
+		}
+		for (int i = 0; i < m; i++) {
+			scanf(" %d %d %d", &a, &b, &l);
+			if (w[a][b] == -1) {
+				w[a][b] = l;
+				w[b][a] = l;
+			}
+			else {
+				w[a][b] = min(w[a][b], l);
+				w[b][a] = w[a][b];
+			}
+		}
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= n; j++) {
+				dis[i][j] = w[i][j];
+			}
+		}
+		int ans = -1;
+		for (int k = 1; k <= n; k++) {
+			for (int i = 1; i <= n; i++) {
+				if (i == k) continue;
+				for (int j = i + 1; j <= n; j++) {
+					if (j == k) continue;
+					// 检测最小环
+					if ((w[k][i] != -1) && (w[k][j] != -1)) {
+						if (dis[i][j] != -1) {
+							if (ans == -1 || (ans > w[k][i] + w[k][j] + dis[i][j])) {
+								ans = w[k][i] + w[k][j] + dis[i][j];
+								route.clear();
+								route.push_back(k);
+								memset(visited, false, sizeof(visited));
+								find_path(i, j);
+							}
+						}
+					}
+					if (dis[i][k] == -1 || dis[k][j] == -1) continue;
+					if (dis[i][j] == -1 || (dis[i][j] > dis[i][k] + dis[k][j])) {
+						dis[i][j] = dis[i][k] + dis[k][j];
+						dis[j][i] = dis[i][j];
+						mid[i][j] = mid[j][i] = k;
+					}
+				}
+			}
+		}
+		if (ans == -1) printf("No solution.\n");
+		else {
+			for (int i = route.size() - 1; i > 0; i--) {
+				printf("%d ", route[i]);
+			}
+			printf("%d\n", route[0]);
+		}
+	}
+	return 0;
+}
+```
+
 ### 树状数组|hdu1166
 ```c++
 #define _CRT_SECURE_NO_WARNINGS
