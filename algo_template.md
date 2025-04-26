@@ -220,24 +220,19 @@ public:
 };
 
 void solve() {
-    BigInteger a, b;
-    //cin >> a >> b;
-    //cout << a << endl;
-    //cout << b << endl;
-    //cout << (a == b) << endl;
-    //cout << (a != b) << endl;
-    //cout << (-a) << endl;
-    //cout << a.absCompare(b) << endl;
-    //cout << b.absCompare(a) << endl;
-    //b = a;
-    //cout << a.absCompare(b) << endl;
-
-    a = "99999999999999999999";
-    b = 3;
-    cout << (a + b) << endl;
-    cout << (a - b) << endl;
-    cout << (a * b) << endl;
-    cout << (a / b) << endl;
+    int n, k;
+    cin >> n >> k;
+    BigInteger f0, f1, nf0, nf1;
+    f0 = 0;
+    f1 = k - 1;
+    for (int i = 2; i <= n; i++) {
+        nf0 = f1;
+        nf1 = (f0 + f1) * (k - 1);
+        f0 = nf0;
+        f1 = nf1;
+    }
+    BigInteger ans = f0 + f1;
+    cout << ans << endl;
 }
 
 int main(int argc, const char* argv[]) {
