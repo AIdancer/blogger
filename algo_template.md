@@ -1,3 +1,252 @@
+### 大整数运算
+```c++
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <bit>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+#include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 100005;
+
+class BigInteger {
+private:
+    static const int BASE = 10000;  // 每个元素存4位
+    static const int WIDTH = 4;
+    std::vector<int> digits; // 低位在前
+    bool negative = false;
+
+public:
+    BigInteger(long long num = 0) { *this = num; }
+    BigInteger(const std::string& str) { *this = str; }
+
+    BigInteger& operator=(long long num) {
+        digits.clear();
+        negative = false;
+        if (num < 0) {
+            negative = true;
+            num = -num;
+        }
+        do {
+            digits.push_back(num % BASE);
+            num /= BASE;
+        } while (num > 0);
+        return *this;
+    }
+
+    BigInteger& operator=(const std::string& str) {
+        digits.clear();
+        negative = false;
+        int len = str.length(), start = 0;
+        if (str[0] == '-') {
+            negative = true;
+            start = 1;
+        }
+        for (int i = len; i > start; i -= WIDTH) {
+            int end = i, begin = std::max(start, i - WIDTH);
+            int num = std::stoi(str.substr(begin, end - begin));
+            digits.push_back(num);
+        }
+        trim();
+        return *this;
+    }
+
+    // 去除前导0
+    void trim() {
+        while (digits.size() > 1 && digits.back() == 0)
+            digits.pop_back();
+        if (digits.size() == 1 && digits[0] == 0)
+            negative = false;
+    }
+
+    // 比较绝对值
+    int absCompare(const BigInteger& b) const {
+        if (digits.size() != b.digits.size())
+            return digits.size() > b.digits.size() ? 1 : -1;
+        for (int i = digits.size() - 1; i >= 0; --i) {
+            if (digits[i] != b.digits[i])
+                return digits[i] > b.digits[i] ? 1 : -1;
+        }
+        return 0;
+    }
+
+    bool operator==(const BigInteger& b) const {
+        return negative == b.negative && digits == b.digits;
+    }
+
+    bool operator!=(const BigInteger& b) const {
+        return !(*this == b);
+    }
+
+    BigInteger operator-() const {
+        BigInteger result = *this;
+        if (result != 0)
+            result.negative = !negative;
+        return result;
+    }
+
+    BigInteger abs() const {
+        BigInteger result = *this;
+        result.negative = false;
+        return result;
+    }
+
+    // 输入输出
+    friend std::ostream& operator<<(std::ostream& out, const BigInteger& num) {
+        if (num.negative) out << '-';
+        out << (num.digits.empty() ? 0 : num.digits.back());
+        for (int i = num.digits.size() - 2; i >= 0; --i)
+            out << std::setw(WIDTH) << std::setfill('0') << num.digits[i];
+        return out;
+    }
+
+    friend std::istream& operator>>(std::istream& in, BigInteger& num) {
+        std::string s;
+        in >> s;
+        num = s;
+        return in;
+    }
+
+    // 运算符重载
+    BigInteger operator+(const BigInteger& b) const {
+        if (negative == b.negative) {
+            BigInteger result;
+            result.digits.clear();
+            result.negative = negative;
+            int carry = 0;
+            for (size_t i = 0; i < digits.size() || i < b.digits.size() || carry; ++i) {
+                int x = carry;
+                if (i < digits.size()) x += digits[i];
+                if (i < b.digits.size()) x += b.digits[i];
+                result.digits.push_back(x % BASE);
+                carry = x / BASE;
+            }
+            return result;
+        }
+        if (negative) return b - (-(*this));
+        else return *this - (-b);
+    }
+
+    BigInteger operator-(const BigInteger& b) const {
+        if (!negative && b.negative) return *this + (-b);
+        if (negative && !b.negative) return -((-*this) + b);
+
+        if (absCompare(b) >= 0) {
+            BigInteger result;
+            result.digits.clear();
+            result.negative = negative;
+            int carry = 0;
+            for (size_t i = 0; i < digits.size(); ++i) {
+                int x = digits[i] - carry - (i < b.digits.size() ? b.digits[i] : 0);
+                if (x < 0) {
+                    x += BASE;
+                    carry = 1;
+                }
+                else {
+                    carry = 0;
+                }
+                result.digits.push_back(x);
+            }
+            result.trim();
+            return result;
+        }
+        else {
+            return -(b - *this);
+        }
+    }
+
+    BigInteger operator*(const BigInteger& b) const {
+        BigInteger result;
+        result.digits.resize(digits.size() + b.digits.size(), 0);
+        for (size_t i = 0; i < digits.size(); ++i) {
+            int carry = 0;
+            for (size_t j = 0; j < b.digits.size() || carry; ++j) {
+                long long cur = result.digits[i + j] + (long long)digits[i] * (j < b.digits.size() ? b.digits[j] : 0) + carry;
+                result.digits[i + j] = cur % BASE;
+                carry = cur / BASE;
+            }
+        }
+        result.negative = (negative != b.negative);
+        result.trim();
+        return result;
+    }
+
+    BigInteger operator/(const BigInteger& b) const {
+        if (b == 0) throw std::runtime_error("Division by zero");
+
+        BigInteger dividend = this->abs();
+        BigInteger divisor = b.abs();
+        BigInteger result;
+        result.digits.resize(dividend.digits.size(), 0);
+
+        BigInteger cur = 0;
+        for (int i = dividend.digits.size() - 1; i >= 0; --i) {
+            cur = cur * BASE + dividend.digits[i];
+            int l = 0, r = BASE - 1, x = 0;
+            while (l <= r) {
+                int m = (l + r) / 2;
+                BigInteger tmp = divisor * m;
+                if (tmp.absCompare(cur) <= 0) {
+                    x = m;
+                    l = m + 1;
+                }
+                else {
+                    r = m - 1;
+                }
+            }
+            result.digits[i] = x;
+            cur = cur - divisor * x;
+        }
+
+        result.negative = (this->negative != b.negative);
+        result.trim();
+        return result;
+    }
+};
+
+void solve() {
+    BigInteger a, b;
+    //cin >> a >> b;
+    //cout << a << endl;
+    //cout << b << endl;
+    //cout << (a == b) << endl;
+    //cout << (a != b) << endl;
+    //cout << (-a) << endl;
+    //cout << a.absCompare(b) << endl;
+    //cout << b.absCompare(a) << endl;
+    //b = a;
+    //cout << a.absCompare(b) << endl;
+
+    a = "99999999999999999999";
+    b = 3;
+    cout << (a + b) << endl;
+    cout << (a - b) << endl;
+    cout << (a * b) << endl;
+    cout << (a / b) << endl;
+}
+
+int main(int argc, const char* argv[]) {
+    freopen("data.in", "r", stdin);
+    solve();
+    return 0;
+}
+```
+
 ### 手撸快速排序
 ```c++
 # define _CRT_SECURE_NO_WARNINGS
