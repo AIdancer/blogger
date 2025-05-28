@@ -4,5 +4,7 @@ pip install fastapi
 
 pip install "uvicorn[standard]"
 
-uvicorn main:app --host 0.0.0.0 --port 8000 --app-dir /root/td_backend 
+uvicorn main:app --host 0.0.0.0 --port 8000 --app-dir /root/td_backend
+
+docker run --rm -p 8000:8000 detect:v1.0 uvicorn main:app --host 0.0.0.0 --port 8000 --app-dir /root/td_backend
 ```
