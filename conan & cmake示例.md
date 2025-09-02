@@ -63,3 +63,10 @@ conan install .. --build=missing
 conan build ..
 然后就安装好了, 执行./Release/app即可运行
 ```
+或者只使用conan作为管理和下载依赖的工具, 直接用cmake编译:  
+```bash
+mkdir build && cd build
+conan install .. --build=missing
+cmake . -B build -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
