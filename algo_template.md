@@ -241,6 +241,143 @@ int main(int argc, const char* argv[]) {
     return 0;
 }
 ```
+### 凸包(poj1113)
+```c++
+#define _CRT_SECURE_NO_WARNINGS
+
+// #include <bit>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+// #include <functional>
+#include <map>
+#include <queue>
+#include <set>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+const double pi = acos(-1.0);
+
+const int N = 100005;
+
+struct Point {
+    double x, y;
+    bool operator<(const Point& p) const {
+        return (y < p.y) || (y == p.y && x < p.x);
+    }
+};
+
+// 向量叉积 (p1p2 × p1p3)
+double cross(const Point& p1, const Point& p2, const Point& p3) {
+    return (p2.x - p1.x) * (p3.y - p1.y) -
+           (p2.y - p1.y) * (p3.x - p1.x);
+}
+
+// 距离平方，用于比较极角相同时排序
+double dist2(const Point& a, const Point& b) {
+    return (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y);
+}
+
+struct PolarCompare {
+    Point pivot;
+
+    PolarCompare(Point p) : pivot(p) {}
+
+    bool operator()(const Point& a, const Point& b) const {
+        // 这里的 cross 是您已定义的向量叉积函数
+        double c = cross(pivot, a, b); 
+        
+        if (fabs(c) < 1e-9) // 共线
+            // 这里的 dist2 是您已定义的距离平方函数
+            return dist2(pivot, a) < dist2(pivot, b); 
+        
+        return c > 0; // 左转排在前面
+    }
+};
+
+// Graham Scan 主过程
+vector<Point> grahamScan(vector<Point>& pts) {
+    int n = pts.size();
+    if (n <= 1) return pts;
+
+    // 1. 找到最低点（y最小，若相同取x最小）
+    swap(pts[0], *min_element(pts.begin(), pts.end()));
+
+    Point pivot = pts[0];
+
+    // C++20写法
+    // 2. 按极角排序（相同角度按距离近远排序）
+    // sort(pts.begin() + 1, pts.end(), [&](const Point& a, const Point& b) {
+    //     double c = cross(pivot, a, b);
+    //     if (fabs(c) < 1e-9) // 共线
+    //         return dist2(pivot, a) < dist2(pivot, b);
+    //     return c > 0; // 左转排在前面
+    // });
+
+    // 老写法
+    sort(pts.begin() + 1, pts.end(), PolarCompare(pivot));
+
+    // 3. 扫描构造凸包
+    vector<Point> hull;
+    // C++20写法
+    // for (auto& p : pts) {
+    //     while (hull.size() >= 2 && cross(hull[hull.size()-2], hull.back(), p) < 0)
+    //         hull.pop_back(); // 非左转（右转或共线）则退栈, 保留共线点!
+    //     hull.push_back(p);
+    // }
+    // 老写法
+    for (int i = 0; i < n; i++) {
+        Point p = pts[i];
+        while (hull.size() >= 2 && cross(hull[hull.size()-2], hull.back(), p) < 0)
+            hull.pop_back(); // 非左转（右转或共线）则退栈, 保留共线点!
+        hull.push_back(p);
+    }
+
+    return hull;
+}
+
+double cal_incli(Point a, Point b) {
+    return fabs((b.y - a.y) / (b.x - a.x));
+}
+
+int n;
+double l;
+vector<Point> pts;
+
+void solve() {
+    scanf("%d %lf", &n, &l);
+    Point p;
+    for (int i = 0; i < n; i++) {
+        scanf(" %lf %lf", &p.x, &p.y);
+        pts.push_back(p);
+    }
+    vector<Point> hull = grahamScan(pts);
+    double ans = 0.0;
+    int sz = hull.size();
+    for (int i = 0; i < sz-1; i++) {
+        ans += sqrt(dist2(hull[i], hull[i+1]));
+    }
+    ans += sqrt(dist2(hull[0], hull[sz-1]));
+    ans += pi * 2 * l;
+    printf("%.0f\n", ans);
+}
+
+int main() {
+    freopen("../data.in", "r", stdin);
+    solve();
+    return 0;
+}
+```
+
 
 ### 手撸快速排序
 ```c++
