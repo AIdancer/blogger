@@ -21,3 +21,19 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 ```
+
+### 安装gnome-startup-applications
+```bash
+sudo apt update
+sudo apt install gnome-startup-applications
+```
+
+### 添加开机自动启动项
+```bash
+shell中输入 gnome-session-properties 启动gnome-startup-applications，然后
+打开后点「Add（添加）」：
+Name：Fcitx5
+Command：fcitx5 -d
+Comment：随意
+保存即可，下次登录自动生效。
+```
